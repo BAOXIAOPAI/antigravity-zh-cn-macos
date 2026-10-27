@@ -1,0 +1,29 @@
+{
+  "name": "antigravity-zh-cn-macos",
+  "version": "0.2.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node adapter.mjs",
+    "restore": "node adapter.mjs --restore",
+    "test": "node --test tests/*.test.mjs",
+    "package": "node scripts/package-release.mjs"
+  },
+  "description": "Unofficial reversible Simplified Chinese UI adaptation for Google Antigravity on macOS.",
+  "license": "MIT",
+  "author": "BAOXIAOPAI",
+  "engines": {
+    "node": ">=22"
+  },
+  "os": [
+    "darwin"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BAOXIAOPAI/antigravity-zh-cn-macos.git"
+  },
+  "bugs": {
+    "url": "https://github.com/BAOXIAOPAI/antigravity-zh-cn-macos/issues"
+  },
+  "homepage": "https://github.com/BAOXIAOPAI/antigravity-zh-cn-macos#readme"
+}

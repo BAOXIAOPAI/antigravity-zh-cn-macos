@@ -1,0 +1,27 @@
+name: 漏译或翻译建议
+description: 反馈仍显示英文或不准确的界面文案
+title: "[翻译] "
+body:
+  - type: input
+    id: antigravity
+    attributes:
+      label: Antigravity 版本
+      placeholder: 例如 2.26.0（独立桌面版）
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: macOS / Node.js 版本
+      placeholder: 例如 macOS 15.x / Node.js 22.x
+  - type: textarea
+    id: original
+    attributes:
+      label: 英文原文与出现位置
+      description: 请写下操作步骤和界面原文。截图可选，请先遮住私人信息。
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: 建议译文（可选）

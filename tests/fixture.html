@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><title>中文适配 · 浏览器测试样例</title>
+<style>
+  *{box-sizing:border-box}body{margin:0;background:#f5f6f8;color:#222;font:14px -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif}
+  header{padding:18px 28px;background:#182835;color:#fff}header strong{font-size:18px}header span{margin-left:16px;opacity:.75}
+  #layout{display:flex;max-width:1100px;margin:32px auto;min-height:580px;background:#fff;border:1px solid #ddd;border-radius:16px;overflow:hidden}
+  nav{width:200px;padding:22px;background:#f0f2f4}nav a,nav button{display:block;margin:9px 0;text-decoration:none;color:#333}
+  button{border:1px solid #d9dde3;background:#fff;border-radius:7px;padding:7px 13px;font:inherit;cursor:pointer}
+  main{padding:28px;flex:1}h1{margin-top:0}h2{font-size:16px;margin:24px 0 8px}p{color:#5b6571;line-height:1.65}
+  .row{display:flex;justify-content:space-between;gap:20px;align-items:center;padding:13px 0;border-bottom:1px solid #edf0f2}
+  textarea{width:100%;height:54px;border:1px solid #ddd;border-radius:8px;padding:10px;margin-top:18px;font:inherit}
+  #tests{max-width:1100px;margin:0 auto 32px;padding:20px 28px;background:#fff;border:1px solid #ddd;border-radius:12px}
+  #tests li{line-height:1.8} .pass{color:#087344}.fail{color:#b42318}.checks{display:flex;gap:10px;margin-top:18px}.sample{color:#657080;font-size:12px}
+</style>
+<header><strong>Antigravity 中文适配</strong><span>浏览器测试样例 · 并非 Antigravity 实机截图</span></header>
+<div id="layout">
+  <nav role="navigation" aria-label="Sidebar">
+    <a href="/" aria-label="New Conversation">New Conversation</a>
+    <a href="/history" aria-label="Conversation History">Conversation History</a>
+    <button data-testid="automations-button">Automations</button>
+    <a href="/customizations">Customizations</a>
+    <h2><button>Projects</button></h2>
+    <a href="/projects/user-project" id="project-name">Settings</a>
+    <button data-testid="settings-button">Settings</button>
+  </nav>
+  <main>
+    <div class="settings-modal-container" role="dialog" aria-label="Settings">
+      <h1>Settings</h1><p>Configure agent execution, queued message delivery, and permissions.</p>
+      <h2>Global Permissions</h2>
+      <div class="row"><div><strong>Permission Preset</strong><p>Controls the actions the agent can take.</p></div><button>Default</button></div>
+      <div class="row"><div><strong>Tool Permissions</strong><p>Modify permissions for file, terminal, and MCP tools.</p></div><button id="open">Open</button></div>
+      <h2>Agent Behavior</h2>
+      <div class="row"><div><strong>Plan Review Policy</strong><p>Whether the agent asks you to review its documents.</p></div><button>Always Ask</button></div>
+      <pre><code id="code">Settings</code></pre>
+      <button data-testid="project-name" id="named-item" aria-label="General" title="General">General</button>
+      <input id="user-value" value="Settings" placeholder="Search..." aria-label="Search">
+    </div>
+    <div class="markdown" id="chat">Settings</div>
+    <div contenteditable="true" id="editable" aria-label="Message input">Settings</div>
+    <textarea placeholder="Ask anything, @ to mention, / for actions" id="compose">Settings</textarea>
+    <button aria-label="Select project, current: Settings" id="project-selector"></button>
+    <section id="regressions">
+      <h2 id="conversation-log">Conversation Log</h2>
+      <div id="empty-state">No conversations yet</div>
+      <button id="count-label">No more older messages, showing 7 of 7</button>
+      <span id="timestamp">3 minutes ago</span>
+      <span id="compact-timestamp">12m ago</span>
+      <button id="thought-duration">Thought for 5s</button>
+      <button id="cancel-shortcut">Cancel (⌃C)</button>
+      <div role="menu" aria-label="Select model">
+        <span id="model-header" data-testid="model-selector-header">Model</span>
+        <div role="menuitem" data-testid="model-selector-item"><span id="model-brand">Claude Sonnet 4.6 (Thinking)</span><span id="notice">Notice</span></div>
+        <div role="menuitem" data-testid="model-selector-item"><span id="medium-model">GPT-OSS 120B (Medium)</span></div>
+        <div role="menuitem"><span id="unavailable">Unavailable</span></div>
+        <div role="menuitem" id="view-usage">View Usage</div>
+      </div>
+      <button data-testid="model-selector-trigger" aria-label="Select model, current: Gemini 3.8 Flash Low" id="effort-label"></button>
+      <div aria-label="Agent response"><div id="plain-response">Thinking</div><button id="thinking">Thinking</button><button id="undo">Undo to this point</button></div>
+      <div data-message-id="user-1"><div id="plain-user">Unavailable</div><button id="copy-message">Copy</button></div>
+      <button data-testid="project-selector-trigger" id="project-owner" aria-label="Select project, current: General"></button>
+      <div role="listbox" aria-labelledby="project-owner"><div role="option" id="project-option">General</div></div>
+    </section>
+    <div class="checks"><button id="restore">恢复英文</button><button id="reapply">重新应用中文</button><button id="dynamic">打开动态菜单</button></div>
+    <p class="sample">上面两处 Settings 和一处 General 为测试用户内容，预期保留英文。</p>
+  </main>
+</div>
+<section id="tests" data-ag-zh-ignore><strong id="result">正在验证…</strong><ol id="results"></ol></section>
+<script src="/translation.js"></script>
+<script>
+  const checks=[];
+  const assert=(name,condition)=>checks.push({name,pass:!!condition});
+  const wait=()=>new Promise(resolve=>setTimeout(resolve,150));
+  const node=id=>document.getElementById(id);
+  document.getElementById('open').addEventListener('click',()=>{node('open').dataset.clicked='yes'});
+  document.getElementById('restore').onclick=()=>window.__antigravityZhCN?.stop();
+  document.getElementById('reapply').onclick=()=>{const s=document.createElement('script');s.src='/translation.js';document.body.append(s)};
+  document.getElementById('dynamic').onclick=()=>{const menu=document.createElement('div');menu.role='menu';menu.innerHTML='<button>Cancel</button><button>Save</button>';document.querySelector('main').append(menu)};
+  (async()=>{
+    assert('设置标题翻译',document.querySelector('h1').textContent==='设置');
+    assert('权限默认值翻译',document.querySelector('.row button').textContent==='默认');
+    assert('权限说明准确翻译',document.querySelector('.row p').textContent==='控制智能体可以执行哪些操作。');
+    assert('主导航翻译',document.querySelector('[data-testid="settings-button"]').textContent==='设置');
+    assert('项目名称保留',node('project-name').textContent==='Settings');
+    assert('标记为用户名称的内容保留',node('named-item').textContent==='General');
+    assert('用户名称的无障碍标签与提示保留',node('named-item').getAttribute('aria-label')==='General'&&node('named-item').title==='General');
+    assert('代码保留',node('code').textContent==='Settings');
+    assert('聊天正文保留',node('chat').textContent==='Settings');
+    assert('富文本输入保留',node('editable').textContent==='Settings');
+    assert('表单值保留',node('user-value').value==='Settings'&&node('compose').value==='Settings');
+    assert('输入提示翻译',node('compose').placeholder==='输入你的需求，@ 引用内容，/ 选择操作');
+    assert('无障碍标签翻译',node('editable').getAttribute('aria-label')==='消息输入框');
+    assert('动态标签中的项目名保留',node('project-selector').getAttribute('aria-label')==='选择项目，当前：Settings');
+    assert('对话页独立标题翻译',node('conversation-log').textContent==='对话记录');
+    assert('空状态翻译',node('empty-state').textContent==='暂无对话');
+    assert('动态消息数量翻译',node('count-label').textContent==='已无更早的消息，当前显示 7/7 条');
+    assert('动态相对时间翻译',node('timestamp').textContent==='3 分钟前');
+    assert('实机紧凑时间格式翻译',node('compact-timestamp').textContent==='12 分钟前');
+    assert('实机思考耗时翻译',node('thought-duration').textContent==='已思考 5 秒');
+    assert('带快捷键的取消按钮翻译',node('cancel-shortcut').textContent==='取消 (⌃C)');
+    assert('模型菜单标题翻译',node('model-header').textContent==='模型');
+    assert('模型品牌保留并翻译思考模式后缀',node('model-brand').textContent==='Claude Sonnet 4.6（思考模式）');
+    assert('模型推理强度后缀翻译',node('medium-model').textContent==='GPT-OSS 120B（中）');
+    assert('模型提示状态翻译',node('notice').textContent==='提示'&&node('unavailable').textContent==='暂不可用');
+    assert('模型用量入口翻译',node('view-usage').textContent==='查看用量');
+    assert('模型控件中的动态思考强度翻译',node('effort-label').getAttribute('aria-label')==='选择模型，当前：Gemini 3.8 Flash 低');
+    assert('回复容器的正文保持原文',node('plain-response').textContent==='Thinking');
+    assert('回复容器的思考按钮单独翻译',node('thinking').textContent==='思考中'&&node('undo').textContent==='撤销到此处');
+    assert('消息容器的正文保留并翻译复制按钮',node('plain-user').textContent==='Unavailable'&&node('copy-message').textContent==='复制');
+    assert('项目下拉选项名称保留',node('project-option').textContent==='General');
+    node('open').click();assert('原有按钮事件仍可执行',node('open').dataset.clicked==='yes');
+    const originalNode=node('open').firstChild;
+    const dynamic=document.createElement('div');dynamic.setAttribute('role','menu');dynamic.innerHTML='<button>Cancel</button>';
+    document.body.append(dynamic);await wait();
+    assert('新增菜单自动翻译',dynamic.textContent==='取消');
+    originalNode.nodeValue='Close';await wait();assert('React 式文本更新后重新翻译',node('open').textContent==='关闭');
+    assert('保留原文本节点',node('open').firstChild===originalNode);
+    window.__antigravityZhCN.stop();
+    assert('恢复英文时保留最后一次界面更新',node('open').textContent==='Close');
+    assert('恢复英文标题',document.querySelector('h1').textContent==='Settings');
+    assert('恢复输入提示',node('compose').placeholder==='Ask anything, @ to mention, / for actions');
+    assert('恢复原页面语言',document.documentElement.lang==='en');
+    assert('恢复动态菜单',dynamic.textContent==='Cancel');
+    dynamic.remove();
+    await new Promise(resolve=>{const s=document.createElement('script');s.src='/translation.js';s.onload=resolve;document.body.append(s)});
+    assert('再次应用中文',document.querySelector('h1').textContent==='设置');
+    const before=JSON.stringify(window.__antigravityZhCN.status());
+    await new Promise(resolve=>{const s=document.createElement('script');s.src='/translation.js';s.onload=resolve;document.body.append(s)});
+    assert('重复加载不叠加观察器',JSON.stringify(window.__antigravityZhCN.status())===before);
+    const revision=window.__antigravityZhCN.revision;
+    await new Promise(resolve=>{const s=document.createElement('script');s.src='/translation-next.js';s.onload=resolve;document.body.append(s)});
+    assert('同版本词典更新自动替换翻译',node('model-header').textContent==='模型（更新）'&&window.__antigravityZhCN.revision!==revision);
+    window.__antigravityZhCN.stop();
+    assert('热更新后仍能还原模型品牌',node('model-brand').textContent==='Claude Sonnet 4.6 (Thinking)');
+    await new Promise(resolve=>{const s=document.createElement('script');s.src='/translation.js';s.onload=resolve;document.body.append(s)});
+    node('results').replaceChildren(...checks.map(({name,pass})=>{const li=document.createElement('li');li.className=pass?'pass':'fail';li.textContent=(pass?'✓ ':'✗ ')+name;return li}));
+    node('result').textContent=`${checks.filter(c=>c.pass).length}/${checks.length} 项测试通过`;
+    node('result').dataset.passed=String(checks.every(c=>c.pass));
+  })().catch(error=>{node('result').textContent='测试错误：'+error.message;node('result').dataset.passed='false'});
+</script>
+</html>

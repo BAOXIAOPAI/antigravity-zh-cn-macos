@@ -1,0 +1,9 @@
+.watch-state.json
+.DS_Store
+node_modules/
+dist/
+*.zip
+/*.png
+*.log
+.env
+.env.*
