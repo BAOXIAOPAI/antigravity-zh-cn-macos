@@ -12,7 +12,8 @@ const files = [
   'adapter.mjs', 'translator.js', 'zh-CN.json', 'package.json',
   '启动中文适配.command', '恢复英文.command', 'scripts/launcher.zsh',
   'README.md', '使用说明.md', 'LICENSE', 'CHANGELOG.md',
-  'docs/translation-preview.png', 'scripts/package-release.mjs',
+  'docs/screenshots/sidebar.png', 'docs/screenshots/composer.png', 'docs/screenshots/settings.png',
+  'scripts/package-release.mjs',
   'tests/adapter.test.mjs', 'tests/launcher.test.mjs', 'tests/fixture.html', 'tests/serve-fixture.mjs'
 ];
 const scratch = mkdtempSync(join(tmpdir(), 'antigravity-zh-release-'));
